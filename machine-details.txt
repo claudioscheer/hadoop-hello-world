@@ -1,0 +1,3 @@
+user: hadoop
+password: hadoop
+server: hadoop-server
