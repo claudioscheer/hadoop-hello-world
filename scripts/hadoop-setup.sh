@@ -1,7 +1,7 @@
 #!/bin/bash
 
-apt-get install openjdk-8-jdk -y
-apt-get install ssh pdsh neovim -y
+sudo apt-get install openjdk-8-jdk -y
+sudo apt-get install ssh pdsh neovim -y
 
 ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa
 cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
