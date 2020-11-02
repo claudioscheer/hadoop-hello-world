@@ -47,7 +47,6 @@ public class WordCount {
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration config = new Configuration();
-        config.set(MRJobConfig.NUM_MAPS, "100");
         Job job = Job.getInstance(config, "word count");
         job.setJarByClass(WordCount.class);
         job.setMapperClass(TokenizerMapper.class);
