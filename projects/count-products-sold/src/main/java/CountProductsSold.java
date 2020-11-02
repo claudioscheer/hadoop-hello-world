@@ -1,58 +1,49 @@
-// Credits to https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html.
+// Credits to https://www.guru99.com/create-your-first-hadoop-program.html.
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.MRJobConfig;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 import java.io.IOException;
-import java.util.StringTokenizer;
 
-public class WordCount {
+public class CountProductsSold {
 
-    // https://hadoop.apache.org/docs/current/api/org/apache/hadoop/mapreduce/Mapper.html
-    public static class TokenizerMapper extends Mapper<Object, Text, Text, IntWritable> {
+    public static class SalesMapper extends Mapper<Object, Text, Text, IntWritable> {
         private final static IntWritable one = new IntWritable(1);
-        private Text word = new Text();
 
         @Override
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-            StringTokenizer itr = new StringTokenizer(value.toString());
-            while (itr.hasMoreElements()) {
-                word.set(itr.nextToken());
-                context.write(word, one);
-            }
+            String valueString = value.toString();
+            String[] singleCountryData = valueString.split(",");
+            context.write(new Text(singleCountryData[7]), one);
         }
     }
 
-    public static class IntSumReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-        private IntWritable result = new IntWritable();
+    public static class SalesReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
 
         @Override
         public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-            int sum = 0;
+            int frequencyForCountry = 0;
             for (IntWritable val : values) {
-                sum += val.get();
+                frequencyForCountry += val.get();
             }
-            result.set(sum);
-            context.write(key, result);
+            context.write(key, new IntWritable(frequencyForCountry));
         }
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration config = new Configuration();
-        config.set(MRJobConfig.NUM_MAPS, "100");
-        Job job = Job.getInstance(config, "word count");
-        job.setJarByClass(WordCount.class);
-        job.setMapperClass(TokenizerMapper.class);
-        job.setReducerClass(IntSumReducer.class);
-        job.setCombinerClass(IntSumReducer.class);
+        Job job = Job.getInstance(config, "count products sold");
+        job.setJarByClass(CountProductsSold.class);
+        job.setMapperClass(SalesMapper.class);
+        job.setReducerClass(SalesReducer.class);
+        job.setCombinerClass(SalesReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
         FileInputFormat.addInputPath(job, new Path(args[0]));
