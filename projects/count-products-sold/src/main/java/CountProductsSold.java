@@ -21,6 +21,7 @@ public class CountProductsSold {
         public void map(Object key, Text value, Context context) throws IOException, InterruptedException {
             String valueString = value.toString();
             String[] singleCountryData = valueString.split(",");
+
             context.write(new Text(singleCountryData[7]), one);
         }
     }
@@ -41,11 +42,17 @@ public class CountProductsSold {
         Configuration config = new Configuration();
         Job job = Job.getInstance(config, "count products sold");
         job.setJarByClass(CountProductsSold.class);
+
         job.setMapperClass(SalesMapper.class);
+        job.setMapOutputKeyClass(Text.class);
+        job.setMapOutputValueClass(IntWritable.class);
+
         job.setReducerClass(SalesReducer.class);
-        job.setCombinerClass(SalesReducer.class);
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(IntWritable.class);
+
+        job.setCombinerClass(SalesReducer.class);
+
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
         System.exit(job.waitForCompletion(true) ? 0 : 1);
