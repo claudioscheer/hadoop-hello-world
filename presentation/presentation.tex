@@ -1,79 +1,139 @@
 \documentclass[aspectratio=169]{beamer}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{listings}
 
 \usetheme{Madrid}
 \usecolortheme{default}
 
 %------------------------------------------------------------
-\title[About Beamer]
-{About the Beamer class in presentation making}
+\title[MapReduce]
+{Hadoop MapReduce}
 
-\subtitle{A short story}
+\author[Claudio, Gabriell]
+{Claudio~Scheer\inst{1} \and Gabriell~Araujo\inst{1}}
 
-\author[Arthur, Doe]
-{A.~B.~Arthur\inst{1} \and J.~Doe\inst{2}}
-
-\institute[VFU]
+\institute[PUCRS]
 {
 	\inst{1}
-	Faculty of Physics\\
-	Very Famous University
-	\and
-	\inst{2}
-	Faculty of Chemistry\\
-	Very Famous University
+	Master's Degree in Computer Science\\
+	Pontifical Catholic University of Rio Grande do Sul - PUCRS
 }
 
-\date[VLC 2014]
-{Very Large Conference, April 2014}
+\date[2020]
+{High Performance for Big Data Applications}
 %------------------------------------------------------------
-
-
 
 %------------------------------------------------------------
 \AtBeginSection[]
 {
 	\begin{frame}
 		\frametitle{Table of Contents}
+
 		\tableofcontents[currentsection]
 	\end{frame}
 }
 %------------------------------------------------------------
 
-
 \begin{document}
 
 \frame{\titlepage}
 
-
 %---------------------------------------------------------
 \begin{frame}
 	\frametitle{Table of Contents}
+
 	\tableofcontents
 \end{frame}
 %---------------------------------------------------------
 
 %---------------------------------------------------------
-\section{First section}
+\section{Hadoop}
 
 \begin{frame}
-	\frametitle{Sample frame title}
-	This is a text in second frame. For the sake of showing an example.
+	\frametitle{What we mean by Hadoop}
 
-	\begin{itemize}
-		\item<1-> Text visible on slide 1
-		\item<2-> Text visible on slide 2
-		\item<3> Text visible on slides 3
-		\item<4-> Text visible on slide 4
-	\end{itemize}
+	\begin{center}
+		\includegraphics[height=1\textheight,width=0.6\textwidth,keepaspectratio]{./images/hadoop.pdf}
+		{\tiny \href{https://data-flair.training/blogs/hadoop-ecosystem-components}{https://data-flair.training/blogs/hadoop-ecosystem-components}}
+	\end{center}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Image}
-	\begin{figure}
-		\includegraphics[height=0.7\textheight,width=0.3\textwidth,keepaspectratio]{./images/lion-logo.jpg}
-		\caption{here's the image!}
-	\end{figure}
+	\frametitle{MapReduce execution flow}
+
+	\begin{center}
+		\includegraphics[height=1\textheight,width=1\textwidth,keepaspectratio]{./images/map-reduce.pdf}
+		{\tiny \href{https://data-flair.training/blogs/hadoop-ecosystem-components}{https://data-flair.training/blogs/hadoop-ecosystem-components}}
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Custom data types}
+
+	\begin{columns}
+		\column{0.4\textwidth}
+		\begin{itemize}
+			\item LongWritable = long;
+			\item IntWritable = int;
+			\item Text = String;
+			\item ...
+		\end{itemize}
+
+		\column{0.6\textwidth}
+		\begin{lstlisting}[language=java,basicstyle=\tiny,columns=fullflexible]
+public class IntWritable implements WritableComparable<IntWritable> {
+  private int value;
+
+  public IntWritable(int value) { set(value); }
+
+  public void set(int value) { this.value = value; }
+
+  public int get() { return value; }
+
+  @Override
+  public void readFields(DataInput in) throws IOException {
+    value = in.readInt();
+  }
+
+  @Override
+  public void write(DataOutput out) throws IOException {
+    out.writeInt(value);
+  }
+
+  @Override
+  public int compareTo(IntWritable o) {
+    int thisValue = this.value;
+    int thatValue = o.value;
+    return (thisValue < thatValue ? -1 : (thisValue == thatValue ? 0 : 1));
+  }
+}
+        \end{lstlisting}
+	\end{columns}
+
+	\begin{center}
+		{\tiny \href{https://hadoop.apache.org/docs/current/api/org/apache/hadoop/io/package-summary.html}{https://hadoop.apache.org/docs/current/api/org/apache/hadoop/io/package-summary.html}}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{InputFormat}
+
+	\begin{itemize}
+		\item TextInputFormat: <LongWritable, Text>
+		\item KeyValueTextInputFormat: <Text, Text>
+		      \begin{itemize}
+			      \item Key splitted by \textbackslash t;
+		      \end{itemize}
+		\item NLineInputFormat: <LongWritable, Text>
+		      \begin{itemize}
+			      \item config.setInt(``mapreduce.input.lineinputformat.linespermap'', 10000);
+		      \end{itemize}
+		\item Customs InputFormat must implement `getSplits' and `getRecordReader';
+		      \begin{itemize}
+			      \item {\tiny \href{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}}
+		      \end{itemize}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -86,7 +146,11 @@
 %---------------------------------------------------------
 
 %---------------------------------------------------------
-\section{Second section}
+\section{Examples}
+
+- WordCount;
+- CountProductsSold;
+-
 
 \begin{frame}
 	\frametitle{Sample frame title}
