@@ -202,6 +202,10 @@ public class IntWritable implements WritableComparable<IntWritable> {
         }
             \end{lstlisting}
 	\end{itemize}
+
+	\begin{center}
+		{\tiny \href{https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html}{https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html}}
+	\end{center}
 \end{frame}
 
 \begin{frame}
@@ -261,7 +265,11 @@ public class IntWritable implements WritableComparable<IntWritable> {
 	\frametitle{Reducer}
 
 	\begin{itemize}
-		\item Maps <key2, list(value2)> to <key3, value3>;
+		\item Reduces <key2, list(value2)> to <key3, value3>;
+		\item Change the number of reducers:
+		      \begin{itemize}
+			      \item \texttt{job.setNumReduceTasks(2);}
+		      \end{itemize}
 		\item Vanilla example:
 		      \begin{lstlisting}[language=java,basicstyle=\tiny,columns=fullflexible]
         public static class SimpleReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
@@ -279,6 +287,11 @@ public class IntWritable implements WritableComparable<IntWritable> {
         }
             \end{lstlisting}
 	\end{itemize}
+
+	\begin{center}
+		{\tiny \href{https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html}{https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html}}
+		{\tiny \href{https://docs.cloudera.com/HDPDocuments/HDP2/HDP-2.6.5/bk_command-line-installation/content/determine-hdp-memory-config.html}{https://docs.cloudera.com/HDPDocuments/HDP2/HDP-2.6.5/bk\_command-line-installation/content/determine-hdp-memory-config.html}}
+	\end{center}
 \end{frame}
 
 \begin{frame}
@@ -306,28 +319,12 @@ public class IntWritable implements WritableComparable<IntWritable> {
 %---------------------------------------------------------
 \section{Examples}
 
-- WordCount;
-- CountProductsSold;
--
-
 \begin{frame}
-	\frametitle{Sample frame title}
+	\frametitle{Unquestionable!}
 
-	In this slide, some important text will be
-	\alert{highlighted} because it's important.
-	Please, don't abuse it.
-
-	\begin{block}{Remark}
-		Sample text
-	\end{block}
-
-	\begin{alertblock}{Important theorem}
-		Sample text in red box
-	\end{alertblock}
-
-	\begin{examples}
-		Sample text in green box. The title of the block is ``Examples".
-	\end{examples}
+	\begin{center}
+		\includegraphics[height=1\textheight,width=0.5\textwidth,keepaspectratio]{./images/show-me-the-code.jpg}
+	\end{center}
 \end{frame}
 
 \begin{frame}
