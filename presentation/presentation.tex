@@ -77,8 +77,9 @@
 			\item LongWritable = long;
 			\item IntWritable = int;
 			\item Text = String;
-			\item ...
+			\item \href{https://hadoop.apache.org/docs/current/api/org/apache/hadoop/io/package-summary.html}{Other data types (link);}
 		\end{itemize}
+
 
 		\column{0.6\textwidth}
 		\begin{lstlisting}[language=java,basicstyle=\tiny,columns=fullflexible]
@@ -109,11 +110,8 @@ public class IntWritable implements WritableComparable<IntWritable> {
   }
 }
         \end{lstlisting}
+		{\tiny \href{https://github.com/apache/hadoop/blob/master/hadoop-common-project/hadoop-common/src/main/java/org/apache/hadoop/io/IntWritable.java}{\beamergotobutton{Source}}}
 	\end{columns}
-
-	\begin{center}
-		{\tiny \href{https://hadoop.apache.org/docs/current/api/org/apache/hadoop/io/package-summary.html}{https://hadoop.apache.org/docs/current/api/org/apache/hadoop/io/package-summary.html}}
-	\end{center}
 \end{frame}
 
 \begin{frame}
@@ -127,9 +125,9 @@ public class IntWritable implements WritableComparable<IntWritable> {
 		      \end{itemize}
 		\item NLineInputFormat: <LongWritable, Text>
 		      \begin{itemize}
-			      \item config.setInt(``mapreduce.input.lineinputformat.linespermap'', 10000);
+			      \item {\scriptsize \texttt{config.setInt(``mapreduce.input.lineinputformat.linespermap'', 10000)}};
 		      \end{itemize}
-		\item Customs InputFormat must implement `getSplits' and `getRecordReader';
+		\item Customs InputFormat must implement \texttt{getSplits} and \texttt{getRecordReader};
 		      \begin{itemize}
 			      \item {\tiny \href{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}}
 		      \end{itemize}
@@ -137,11 +135,70 @@ public class IntWritable implements WritableComparable<IntWritable> {
 \end{frame}
 
 \begin{frame}
-	In this slide \pause
+	\frametitle{InputSplit}
 
-	the text will be partially visible \pause
+	\begin{itemize}
+		\item Defines the parallelism level;
+		\item Usually splitted by the size of the block;
+		      \begin{itemize}
+			      \item 10TB/128MB = 82000
+		      \end{itemize}
+		\item It is a logical division of the input data;
+		\item Ways to change it:
+		      \begin{itemize}
+			      \item {\scriptsize \texttt{config.set(MRJobConfig.NUM\_MAPS, 2)}};
+			      \item {\scriptsize \texttt{mapreduce.job.maps} on \texttt{mapsite-site.xml}};
+		      \end{itemize}
+	\end{itemize}
 
-	And finally everything will be there
+	\begin{center}
+		{\tiny \href{https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html}{https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html}}
+	\end{center}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{RecordReader}
+
+	\begin{itemize}
+		\item Split InputSplit into <key, value> pairs;
+		      \begin{itemize}
+			      \item Custom implementations can read values from outside the InputSplit;
+		      \end{itemize}
+		\item Max record length:
+		      \begin{itemize}
+			      \item {\scriptsize \texttt{config.setInt(``mapreduce.input.linerecordreader.line.maxlength'', Integer.MAX\_VALUE);}}
+		      \end{itemize}
+		\item Vanilla example:
+		      \begin{lstlisting}[language=java,basicstyle=\tiny,columns=fullflexible]
+        run(Context context) {
+            while(context.nextKeyValue())
+            {
+                map(context.setCurrentKey(), context.getCurrentValue(), context)
+            }
+        }
+            \end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Mapper}
+
+	\begin{itemize}
+		\item Maps <key1, value1> to <key2, value2>;
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Combiner}
+
+	\begin{itemize}
+		\item Reduces data transfer between mapper and reducer;
+		\item Reduces the amount of data to be processed in the reducer;
+	\end{itemize}
+
+	\begin{center}
+		\includegraphics[height=1\textheight,width=0.8\textwidth,keepaspectratio]{./images/combiner.pdf}
+	\end{center}
 \end{frame}
 %---------------------------------------------------------
 
