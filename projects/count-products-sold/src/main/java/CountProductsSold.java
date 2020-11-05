@@ -5,9 +5,7 @@ import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
-import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.Mapper;
-import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.*;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
@@ -15,7 +13,11 @@ import java.io.IOException;
 
 public class CountProductsSold {
 
-    public class SalesMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+    public enum ProductsSold {
+        NUM_SUMS
+    }
+
+    public static class SalesMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         private Text country = new Text();
         private IntWritable one = new IntWritable(1);
 
@@ -28,7 +30,7 @@ public class CountProductsSold {
         }
     }
 
-    public class SalesReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class SalesReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
         private IntWritable frequency = new IntWritable();
 
         @Override
@@ -36,13 +38,14 @@ public class CountProductsSold {
             int frequencyForCountry = 0;
             for (IntWritable val : values) {
                 frequencyForCountry += val.get();
+                context.getCounter(ProductsSold.NUM_SUMS).increment(1);
             }
             frequency.set(frequencyForCountry);
             context.write(key, frequency);
         }
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
+    public static void main(String[] args) throws InterruptedException, IOException, ClassNotFoundException {
         Configuration config = new Configuration();
         config.set(TextOutputFormat.SEPARATOR, ",");
 
@@ -62,6 +65,12 @@ public class CountProductsSold {
         TextInputFormat.addInputPath(job, new Path(args[0]));
         TextOutputFormat.setOutputPath(job, new Path(args[1]));
 
-        System.exit(job.waitForCompletion(true) ? 0 : 1);
+        int exitStatus = job.waitForCompletion(true) ? 0 : 1;
+
+        Counters counters = job.getCounters();
+        Counter sumsCounter = counters.findCounter(ProductsSold.NUM_SUMS);
+        System.out.println(sumsCounter.getDisplayName() + ":" + sumsCounter.getValue());
+
+        System.exit(exitStatus);
     }
 }
