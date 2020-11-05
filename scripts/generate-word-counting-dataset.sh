@@ -1,10 +1,10 @@
 #!/bin/bash
 
-hadoop fs -rm -r /data/word-counting
-hadoop fs -mkdir /data/word-counting
+hdfs dfs -rm -r /data/word-counting
+hdfs dfs -mkdir /data/word-counting
 yes "two words" | head -n 100000000 > large-file
 ls -lh large-file
 echo "Copying file to Hadoop..."
-hadoop fs -put large-file /data/word-counting/
-hadoop fs -ls /data/word-counting/
+hdfs dfs -put large-file /data/word-counting/
+hdfs dfs -ls /data/word-counting/
 rm large-file
