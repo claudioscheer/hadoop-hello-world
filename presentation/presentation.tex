@@ -253,6 +253,9 @@ public class IntWritable implements WritableComparable<IntWritable> {
 	\begin{itemize}
 		\item Collects output from the mappers to the reducers using HTTP requests;
 		\item Sorts the collected <key, value> pairs based on the key;
+		      \begin{itemize}
+			      \item \texttt{job.setSortComparatorClass(StupidSortComparator.class);}
+		      \end{itemize}
 	\end{itemize}
 
 	\begin{center}
@@ -299,20 +302,26 @@ public class IntWritable implements WritableComparable<IntWritable> {
 
 	\begin{itemize}
 		\item Specifies how reducer output will be written;
-		\item TextInputFormat: <LongWritable, Text>
-		\item KeyValueTextInputFormat: <Text, Text>
-		      \begin{itemize}
-			      \item Key splitted by \textbackslash t;
-		      \end{itemize}
-		\item NLineInputFormat: <LongWritable, Text>
 		      \begin{itemize}
 			      \item {\scriptsize \texttt{config.set(TextOutputFormat.SEPARATOR, ``,'');}}
 		      \end{itemize}
-		\item Customs InputFormat must implement \texttt{getSplits} and \texttt{getRecordReader};
+		\item Allows to write multiple outputs;
 		      \begin{itemize}
-			      \item {\tiny \href{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}}
+			      \item {\tiny \href{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/lib/MultipleOutputs.html}{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/lib/MultipleOutputs.html}}
 		      \end{itemize}
 	\end{itemize}
+\end{frame}
+%---------------------------------------------------------
+
+%---------------------------------------------------------
+\section{Optimizations}
+
+\begin{frame}
+	\frametitle{Data locality}
+
+	\begin{center}
+		\includegraphics[height=1\textheight,width=0.5\textwidth,keepaspectratio]{./images/show-me-the-code.jpg}
+	\end{center}
 \end{frame}
 %---------------------------------------------------------
 
