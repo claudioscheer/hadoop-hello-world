@@ -127,28 +127,24 @@ public class IntWritable implements WritableComparable<IntWritable> {
 		      \begin{itemize}
 			      \item {\scriptsize \texttt{config.setInt(NLineInputFormat.LINES\_PER\_MAP, 256)}};
 		      \end{itemize}
-		\item Customs InputFormat must implement \texttt{getSplits} and \texttt{getRecordReader};
-		      \begin{itemize}
-			      \item {\tiny \href{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}}
-		      \end{itemize}
+		\item Custom InputFormat must implement \texttt{getSplits} and \texttt{getRecordReader};
 	\end{itemize}
+
+	\begin{center}
+		{\tiny \href{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}{https://hadoop.apache.org/docs/stable/api/org/apache/hadoop/mapred/InputFormat.html}}
+	\end{center}
 \end{frame}
 
 \begin{frame}
 	\frametitle{InputSplit}
 
 	\begin{itemize}
-		\item Defines the parallelism level;
-		\item Usually splitted by the size of the block;
+		\item Defines the level of parallelism;
+		\item Splitted by the size of the block;
 		      \begin{itemize}
 			      \item 10TB/128MB = 82000
 		      \end{itemize}
 		\item It is a logical division of the input data;
-		\item Ways to change it:
-		      \begin{itemize}
-			      \item {\scriptsize \texttt{config.set(MRJobConfig.NUM\_MAPS, 2)}};
-			      \item {\scriptsize \texttt{mapreduce.job.maps} on \texttt{mapsite-site.xml}};
-		      \end{itemize}
 	\end{itemize}
 
 	\begin{center}
@@ -164,17 +160,18 @@ public class IntWritable implements WritableComparable<IntWritable> {
 		      \begin{itemize}
 			      \item Custom implementations can read values from outside the InputSplit;
 		      \end{itemize}
-		\item Max record length:
+		\item Lines greater than the max record length are ignored:
 		      \begin{itemize}
 			      \item {\scriptsize \texttt{config.setInt(LineRecordReader.MAX\_LINE\_LENGTH, Integer.MAX\_VALUE);}}
 		      \end{itemize}
 		\item Vanilla example:
 		      \begin{lstlisting}[language=java,basicstyle=\tiny,columns=fullflexible]
-        run(Context context) {
-            while(context.nextKeyValue())
-            {
-                map(context.setCurrentKey(), context.getCurrentValue(), context)
+        public void run(Context context) {
+            setup(context);
+            while (context.nextKeyValue()) {
+                map(context.setCurrentKey(), context.getCurrentValue(), context);
             }
+            cleanup(context);
         }
             \end{lstlisting}
 	\end{itemize}
@@ -314,7 +311,72 @@ public class IntWritable implements WritableComparable<IntWritable> {
 %---------------------------------------------------------
 
 %---------------------------------------------------------
-\section{Optimizations}
+\section{General}
+
+\begin{frame}
+	\frametitle{How many maps?}
+
+	\begin{itemize}
+		\item Usually defined by the size of the input;
+		\item Around 10-100 maps per-node;
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Change the number of maps}
+
+	\begin{itemize}
+		\item Change the block size;
+		      \begin{itemize}
+			      \item Describe how to change;
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{How many reducers?}
+
+	\begin{itemize}
+		\item 0.95 or 1.75 multiplied by (<number of nodes> * <number of maximum containers per node>);
+		      \begin{itemize}
+			      \item 1.75 has a much better load balancing;
+			      \item Scale factor are not using whole numbers to reserve a few slots for speculative-tasks and failed tasks;
+		      \end{itemize}
+	\end{itemize}
+
+	\begin{center}
+		{\tiny \href{https://docs.cloudera.com/HDPDocuments/HDP2/HDP-2.6.5/bk_command-line-installation/content/determine-hdp-memory-config.html}{https://docs.cloudera.com/HDPDocuments/HDP2/HDP-2.6.5/bk\_command-line-installation/content/determine-hdp-memory-config.html}}
+	\end{center}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Counters}
+
+	\begin{itemize}
+		\item Change the block size;
+		      \begin{itemize}
+			      \item Describe how to change;
+		      \end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+
+- how to interpret log output
+- how to monitoring
+- how to know which nodes are being used
+
+Configs
+- mapreduce.job.running.map.limit - The maximum number of simultaneous map tasks per job. There is no limit if this value is 0 or negative.
+- mapreduce.job.max.map - Limit on the number of map tasks allowed per job. There is no limit if this value is negative.
+- mapreduce.input.fileinputformat.split.maxsize - split size
+
+% \item Ways to change it:
+%       \begin{itemize}
+%           \item {\scriptsize \texttt{config.set(MRJobConfig.NUM\_MAPS, 2)}};
+%           \item {\scriptsize \texttt{mapreduce.job.maps} on \texttt{mapsite-site.xml}};
+%           \item {\scriptsize \texttt{bin/hadoop jar -Dmapreduce.job.maps=5 thejar.jar ...}}
+%       \end{itemize}
 
 \begin{frame}
 	\frametitle{Data locality}
