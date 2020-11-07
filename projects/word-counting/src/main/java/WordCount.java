@@ -1,4 +1,8 @@
-// Credits to https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html.
+// Credits to
+// https://hadoop.apache.org/docs/current/hadoop-mapreduce-client/hadoop-mapreduce-client-core/MapReduceTutorial.html.
+
+import java.io.IOException;
+import java.util.StringTokenizer;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
@@ -6,24 +10,22 @@ import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Job;
-import org.apache.hadoop.mapreduce.MRJobConfig;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.Reducer;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-import java.io.IOException;
-import java.util.StringTokenizer;
-
 public class WordCount {
 
     // https://hadoop.apache.org/docs/current/api/org/apache/hadoop/mapreduce/Mapper.html
-    public static class TokenizerMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+    public static class TokenizerMapper
+            extends Mapper<LongWritable, Text, Text, IntWritable> {
         private IntWritable one = new IntWritable(1);
         private Text word = new Text();
 
         @Override
-        public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
+        public void map(LongWritable key, Text value, Context context)
+                throws IOException, InterruptedException {
             StringTokenizer itr = new StringTokenizer(value.toString());
             while (itr.hasMoreElements()) {
                 word.set(itr.nextToken());
@@ -32,11 +34,14 @@ public class WordCount {
         }
     }
 
-    public static class IntSumReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
+    public static class IntSumReducer
+            extends Reducer<Text, IntWritable, Text, IntWritable> {
         private IntWritable result = new IntWritable();
 
         @Override
-        public void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
+        public void reduce(Text key, Iterable<IntWritable> values,
+                           Context context)
+                throws IOException, InterruptedException {
             int sum = 0;
             for (IntWritable val : values) {
                 sum += val.get();
@@ -46,9 +51,9 @@ public class WordCount {
         }
     }
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
+    public static void main(String[] args)
+            throws IOException, ClassNotFoundException, InterruptedException {
         Configuration config = new Configuration();
-        config.set(MRJobConfig.NUM_MAPS, "4");
 
         Job job = Job.getInstance(config, "word count 4");
         job.setJarByClass(WordCount.class);

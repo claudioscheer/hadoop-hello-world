@@ -1,5 +1,7 @@
 // Credits to https://www.guru99.com/create-your-first-hadoop-program.html.
 
+import java.io.IOException;
+
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IntWritable;
@@ -9,13 +11,9 @@ import org.apache.hadoop.mapreduce.*;
 import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 
-import java.io.IOException;
-
 public class CountProductsSold {
 
-    public enum ProductsSold {
-        NUM_SUMS
-    }
+    public enum ProductsSold {NUM_SUMS}
 
     public static class SalesMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
         private Text country = new Text();

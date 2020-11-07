@@ -1,14 +1,14 @@
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.security.UserGroupInformation;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.URI;
 import java.security.PrivilegedExceptionAction;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.security.UserGroupInformation;
 
 public class HDFSOperations {
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -19,7 +19,6 @@ public class HDFSOperations {
         UserGroupInformation ugi = UserGroupInformation.createRemoteUser(username);
         ugi.doAs(new PrivilegedExceptionAction<Void>() {
             public Void run() throws Exception {
-
                 String text = "Hello, this is sample text to be written to a HDFS file.";
                 FileSystem fs = FileSystem.get(new URI(hdfsUrl), configuration);
 
