@@ -353,37 +353,37 @@ public class IntWritable implements WritableComparable<IntWritable> {
 	\frametitle{Counters}
 
 	\begin{itemize}
-		\item Change the block size;
+		\item Monitors specific action in the mapreduce job;
+		\item User can define custom counters;
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Uber task}
+
+	\begin{itemize}
+		\item Used when the cost of negotiating a container on a remote node is more than running the task on the JVM Application Master itself;
+		\item Changing default values in \texttt{mapred-site.xml}:
 		      \begin{itemize}
-			      \item Describe how to change;
+			      \item \texttt{mapreduce.job.ubertask.enable}
+			      \item \texttt{mapreduce.job.ubertask.maxmaps}
+			      \item \texttt{mapreduce.job.ubertask.maxreduces}
+			      \item \texttt{mapreduce.job.ubertask.maxbytes}
 		      \end{itemize}
 	\end{itemize}
 \end{frame}
 
-
-
-- how to interpret log output
-- how to monitoring
-- how to know which nodes are being used
-
-Configs
-- mapreduce.job.running.map.limit - The maximum number of simultaneous map tasks per job. There is no limit if this value is 0 or negative.
-- mapreduce.job.max.map - Limit on the number of map tasks allowed per job. There is no limit if this value is negative.
-- mapreduce.input.fileinputformat.split.maxsize - split size
-
-% \item Ways to change it:
-%       \begin{itemize}
-%           \item {\scriptsize \texttt{config.set(MRJobConfig.NUM\_MAPS, 2)}};
-%           \item {\scriptsize \texttt{mapreduce.job.maps} on \texttt{mapsite-site.xml}};
-%           \item {\scriptsize \texttt{bin/hadoop jar -Dmapreduce.job.maps=5 thejar.jar ...}}
-%       \end{itemize}
-
 \begin{frame}
-	\frametitle{Data locality}
+	\frametitle{Other settings}
 
-	\begin{center}
-		\includegraphics[height=1\textheight,width=0.5\textwidth,keepaspectratio]{./images/show-me-the-code.jpg}
-	\end{center}
+	\begin{itemize}
+		\item Useful settings that can be changed in \texttt{mapred-site.xml}:
+		      \begin{itemize}
+			      \item \texttt{mapreduce.job.running.map.limit}: The maximum number of simultaneous map tasks per job;
+			      \item \texttt{mapreduce.job.max.map}: Limit on the number of map tasks allowed per job;
+			      \item \texttt{mapreduce.input.fileinputformat.split.maxsize}: Default split size;
+		      \end{itemize}
+	\end{itemize}
 \end{frame}
 %---------------------------------------------------------
 
@@ -399,25 +399,14 @@ Configs
 \end{frame}
 
 \begin{frame}
-	\frametitle{Two-column slide}
+	\frametitle{Objectives}
 
-	\begin{columns}
-
-		\column{0.5\textwidth}
-		This is a text in first column.
-		$$E=mc^2$$
-		\begin{itemize}
-			\item First item
-			\item Second item
-		\end{itemize}
-
-		\column{0.5\textwidth}
-		This text will be in the second column
-		and on a second tought this is a nice looking
-		layout in some cases.
-	\end{columns}
+	\begin{itemize}
+		\item How to setup Hadoop on a multi-node cluster;
+		\item Show coding examples;
+		\item Show how to monitor running jobs;
+	\end{itemize}
 \end{frame}
 %---------------------------------------------------------
-
 
 \end{document}
