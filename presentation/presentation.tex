@@ -142,7 +142,7 @@ public class IntWritable implements WritableComparable<IntWritable> {
 		\item Defines the level of parallelism;
 		\item Splitted by the size of the block;
 		      \begin{itemize}
-			      \item 10TB/128MB = 82000
+			      \item 10TB/128MB = 82000 maps;
 		      \end{itemize}
 		\item It is a logical division of the input data;
 	\end{itemize}
@@ -342,7 +342,7 @@ public class IntWritable implements WritableComparable<IntWritable> {
 	\frametitle{Counters}
 
 	\begin{itemize}
-	    \item Monitors specific action in the mapreduce job;
+		\item Monitors specific action in the MapReduce job;
 		\item User can define custom counters;
 	\end{itemize}
 \end{frame}
@@ -351,7 +351,7 @@ public class IntWritable implements WritableComparable<IntWritable> {
 	\frametitle{Uber task}
 
 	\begin{itemize}
-	    \item Used when the cost of negotiating a container on a remote node is more than running the task on the JVM Application Master itself;
+		\item Used when the cost of negotiating a container on a remote node is more than running the task on the JVM Application Master itself;
 		\item Changing default values in \texttt{mapred-site.xml}:
 		      \begin{itemize}
 			      \item \texttt{mapreduce.job.ubertask.enable}
@@ -389,21 +389,21 @@ public class IntWritable implements WritableComparable<IntWritable> {
 
 \begin{frame}
 	\frametitle{Objectives}
-	
+
 	\begin{itemize}
-	    \item How to setup Hadoop on a multi-node cluster;
-	    \item Show coding examples;
+		\item How to setup Hadoop on a multi-node cluster;
+		\item Show coding examples;
 		\item Show how to monitor running jobs;
 	\end{itemize}
 \end{frame}
 
 \begin{frame}
-    \frametitle{That's all Folks!}
+	\frametitle{That's all Folks!}
 
 	\begin{itemize}
-	    \item \href{https://github.com/claudioscheer/hadoop-hello-world}{hadoop-hello-world};
-	    \item \href{https://github.com/claudioscheer/claudioscheer.github.io/blob/master/posts/hadoop/install-hadoop-multi-node-cluster.md}{Install Hadoop in a multi-node cluster scenario};
-	    \item \href{https://github.com/claudioscheer/claudioscheer.github.io/blob/master/posts/hadoop/useful-things-about-hadoop.md}{Useful things about Hadoop};
+		\item \href{https://github.com/claudioscheer/hadoop-hello-world}{hadoop-hello-world};
+		\item \href{https://github.com/claudioscheer/claudioscheer.github.io/blob/master/posts/hadoop/install-hadoop-multi-node-cluster.md}{Install Hadoop in a multi-node cluster scenario};
+		\item \href{https://github.com/claudioscheer/claudioscheer.github.io/blob/master/posts/hadoop/useful-things-about-hadoop.md}{Useful things about Hadoop};
 	\end{itemize}
 \end{frame}
 %---------------------------------------------------------
